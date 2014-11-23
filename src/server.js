@@ -12,13 +12,13 @@ var auth = require('./auth')
 var protect = auth.protectRoute.bind(auth, { failureRedirect: '/failure' })
 var app = express()
 
-app.engine('html', require('ejs').renderFile);
+app.engine('html', require('ejs').renderFile)
 app.set('view engine', 'html')
 app.set('views', path.join(__dirname, 'views'))
 
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: false }))
-app.use(session({ secret: 'keyboard cat' }));
+app.use(session({ secret: 'keyboard cat' }))
 app.use(passport.initialize())
 app.use(passport.session({
   store: sessionStore
@@ -28,30 +28,27 @@ app.use(passport.session({
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
-    console.log('username', username)
-    console.log('password', password)
-
     userStore.findUser({ username: username }, function(err, user) {
-      console.log('found user', user)
-      if (err) { return done(err); }
-      if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
-      }
-      if (!user.validPassword(password)) {
-        return done(null, false, { message: 'Incorrect password.' });
-      }
-      return done(null, user);
-    });
+      if (err) return done(err)
+
+      if (!user)
+        return done(null, false, { message: 'Incorrect username.' })
+
+      if (!user.validPassword(password))
+        return done(null, false, { message: 'Incorrect password.' })
+
+      return done(null, user)
+    })
   }
-));
+))
 
 passport.serializeUser(function(user, done) {
-  done(null, user.username);
-});
+  done(null, user.username)
+})
 
 passport.deserializeUser(function(username, done) {
   userStore.findUser({ username: username }, done)
-});
+})
 
 
 app.get('/', function (req, res) {
@@ -62,10 +59,10 @@ app.get('/login', function (req, res) {
   res.render('login')
 })
 
-app.get('/logout', function(req, res){
-  req.logout();
+app.get('/logout', function(req, res) {
+  req.logout()
   res.redirect('/login')
-});
+})
 
 app.get('/success', function (req, res) {
   res.render('success')
@@ -84,7 +81,7 @@ app.post('/login',
     successRedirect: '/success',
     failureRedirect: '/failure'
   })
-);
+)
 
 app.listen(3000, function () {
   console.log('listening at 3000...')

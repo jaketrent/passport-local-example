@@ -1,3 +1,5 @@
+'use strict'
+
 var extend = require('lodash-node/modern/objects/assign')
 
 var defaults = {
@@ -7,11 +9,8 @@ var defaults = {
 function protectRoute(opts) {
   var options = extend({}, defaults, opts)
   return function (req, res, next) {
-    console.log('req.user')
-    console.log(req.user)
     if (!req.user) return res.redirect(options.failureRedirect)
 
-    console.log('happy, authed')
     next()
   }
 }

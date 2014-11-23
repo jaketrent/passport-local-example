@@ -1,3 +1,5 @@
+'use strict'
+
 var clone = require('lodash-node/modern/objects/clone')
 var extend = require('lodash-node/modern/objects/assign')
 
